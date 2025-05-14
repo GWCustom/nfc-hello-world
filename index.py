@@ -11,6 +11,7 @@ from generic.components import no_auth
 from bfabric_web_apps import dataset_to_dictionary
 import pandas as pd
 from dash import dash_table
+import os
 
 # Here we define the sidebar of the UI, including the clickable components like dropdown and slider. 
 sidebar = bfabric_web_apps.components.charge_switch + [
@@ -210,15 +211,17 @@ def submit_job(n_clicks, queue, entity_data, token_data, app_data, raw_token):
             
             files_as_byte_strings = {"attachment_1.html" : b"<html><body><h1>Hello World</h1></body></html>"}
 
+            home_directory = os.path.expanduser("~") 
+            
             bash_commands = [
                 "echo 'hello world'", 
-                "nextflow run hello > /home/griffin/SCRATCH/hello.txt"
+                f"nextflow run hello > {home_directory}/SCRATCH/hello.txt"
             ]
 
             container_id = entity_data.get("container", {}).get("id", 2220)
 
             resource_paths = {
-                "/home/griffin/SCRATCH/hello.txt": container_id,
+                f"{home_directory}/SCRATCH/hello.txt": container_id,
             }
 
             attachment_paths = {
